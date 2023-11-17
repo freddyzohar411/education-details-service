@@ -69,7 +69,7 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 
 		savedEducationDetailsEntity.setFormSubmissionId(formSubmissionData.getId());
 
-		return educationDetailsEntityToEducationDetailsRequestDTO(savedEducationDetailsEntity);
+		return educationDetailsEntityToEducationDetailsResponseDTO(savedEducationDetailsEntity);
 	}
 
 	@Override
@@ -135,7 +135,7 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 		}
 	}
 
-	private EducationDetailsResponseDTO educationDetailsEntityToEducationDetailsRequestDTO(EducationDetailsEntity educationDetailsEntity) {
+	private EducationDetailsResponseDTO educationDetailsEntityToEducationDetailsResponseDTO(EducationDetailsEntity educationDetailsEntity) {
 		EducationDetailsResponseDTO educationDetailsResponseDTO = new EducationDetailsResponseDTO();
 		educationDetailsResponseDTO.setId(educationDetailsEntity.getId());
 		educationDetailsResponseDTO.setCreatedAt(educationDetailsEntity.getCreatedAt());
