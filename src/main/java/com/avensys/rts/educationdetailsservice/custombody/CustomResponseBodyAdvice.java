@@ -1,5 +1,8 @@
 package com.avensys.rts.educationdetailsservice.custombody;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -14,9 +17,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import com.avensys.rts.educationdetailsservice.customresponse.HttpResponse;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /***
  * @author Kotaiah

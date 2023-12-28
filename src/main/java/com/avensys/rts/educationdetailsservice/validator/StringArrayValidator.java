@@ -1,11 +1,11 @@
 package com.avensys.rts.educationdetailsservice.validator;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-
 import java.util.Arrays;
 
 import com.avensys.rts.educationdetailsservice.annotation.ValidateString;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class StringArrayValidator implements ConstraintValidator<ValidateString, String> {
     private String[] acceptedValues;
