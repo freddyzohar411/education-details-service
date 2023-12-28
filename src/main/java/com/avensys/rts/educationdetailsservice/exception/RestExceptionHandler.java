@@ -1,6 +1,8 @@
 package com.avensys.rts.educationdetailsservice.exception;
 
-import jakarta.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -18,8 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.avensys.rts.educationdetailsservice.util.ResponseUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * @author Kotaiah

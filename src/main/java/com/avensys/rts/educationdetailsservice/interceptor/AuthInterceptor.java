@@ -1,8 +1,7 @@
 package com.avensys.rts.educationdetailsservice.interceptor;
 
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.avensys.rts.educationdetailsservice.util.JwtUtil;
 
-import java.util.List;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author Kotaiah
