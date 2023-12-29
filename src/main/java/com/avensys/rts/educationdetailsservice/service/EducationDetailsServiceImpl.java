@@ -40,8 +40,8 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public EducationDetailsServiceImpl(EducationDetailsRepository educationDetailsRepository, UserAPIClient userAPIClient,
-			FormSubmissionAPIClient formSubmissionAPIClient) {
+	public EducationDetailsServiceImpl(EducationDetailsRepository educationDetailsRepository,
+			UserAPIClient userAPIClient, FormSubmissionAPIClient formSubmissionAPIClient) {
 		this.educationDetailsRepository = educationDetailsRepository;
 		this.userAPIClient = userAPIClient;
 		this.formSubmissionAPIClient = formSubmissionAPIClient;
@@ -52,7 +52,8 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 	public EducationDetailsResponseDTO createEducationDetails(EducationDetailsRequestDTO educationDetailsRequestDTO) {
 		log.info("Creating Education Details: service");
 		System.out.println("Education Details: " + educationDetailsRequestDTO);
-		EducationDetailsEntity savedEducationDetailsEntity = educationDetailsRequestDTOToEducationDetailsEntity(educationDetailsRequestDTO);
+		EducationDetailsEntity savedEducationDetailsEntity = educationDetailsRequestDTOToEducationDetailsEntity(
+				educationDetailsRequestDTO);
 
 		// Save form data to form submission microservice
 		FormSubmissionsRequestDTO formSubmissionsRequestDTO = new FormSubmissionsRequestDTO();
@@ -75,16 +76,17 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 	public EducationDetailsResponseDTO getEducationDetailsById(Integer id) {
 		EducationDetailsEntity educationDetailsFound = educationDetailsRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Education Details not found"));
-		return educationDetailsEntityToEducationDetailsRequestDTO(educationDetailsFound);
+		return educationDetailsEntityToEducationDetailsResponseDTO(educationDetailsFound);
 	}
 
 	@Override
 	@Transactional
-	public EducationDetailsResponseDTO updateEducationDetails(Integer id, EducationDetailsRequestDTO educationDetailsRequestDTO) {
+	public EducationDetailsResponseDTO updateEducationDetails(Integer id,
+			EducationDetailsRequestDTO educationDetailsRequestDTO) {
 		EducationDetailsEntity educationDetailsFound = educationDetailsRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Education Details not found"));
-		EducationDetailsEntity updatedEducationDetailsEntity = updateEducationDetailsRequestDTOToEducationDetailsEntity(educationDetailsFound,
-				educationDetailsRequestDTO);
+		EducationDetailsEntity updatedEducationDetailsEntity = updateEducationDetailsRequestDTOToEducationDetailsEntity(
+				educationDetailsFound, educationDetailsRequestDTO);
 
 		// Update form submission
 		FormSubmissionsRequestDTO formSubmissionsRequestDTO = new FormSubmissionsRequestDTO();
@@ -100,7 +102,7 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 				.mapClientBodyToClass(formSubmissionResponse.getData(), FormSubmissionsResponseDTO.class);
 
 		updatedEducationDetailsEntity.setFormSubmissionId(formSubmissionData.getId());
-		return educationDetailsEntityToEducationDetailsRequestDTO(updatedEducationDetailsEntity);
+		return educationDetailsEntityToEducationDetailsResponseDTO(updatedEducationDetailsEntity);
 	}
 
 	@Override
@@ -112,21 +114,22 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 	}
 
 	@Override
-	public List<EducationDetailsResponseDTO>getEducationDetailsByEntityTypeAndEntityId(String entityType, Integer entityId) {
-		List<EducationDetailsEntity> educationDetailsEntityList = educationDetailsRepository.findByEntityTypeAndEntityId(entityType,
-				entityId);
+	public List<EducationDetailsResponseDTO> getEducationDetailsByEntityTypeAndEntityId(String entityType,
+			Integer entityId) {
+		List<EducationDetailsEntity> educationDetailsEntityList = educationDetailsRepository
+				.findByEntityTypeAndEntityId(entityType, entityId);
 //		List<EducationDetailsResponseDTO> educationDetailsResponseDTOList = educationDetailsEntityList.stream()
 //				.map(this::educationDetailsEntityToEducationDetailsRequestDTO).toList();
 		return educationDetailsEntityList.stream().map(educationDetailsEntity -> {
-					return educationDetailsEntityToEducationDetailsRequestDTO(educationDetailsEntity);
-				}).toList();
+			return educationDetailsEntityToEducationDetailsResponseDTO(educationDetailsEntity);
+		}).toList();
 	}
 
 	@Override
 	@Transactional
 	public void deleteEducationDetailsByEntityTypeAndEntityId(String entityType, Integer entityId) {
-		List<EducationDetailsEntity> educationDetailsEntityList = educationDetailsRepository.findByEntityTypeAndEntityId(entityType,
-				entityId);
+		List<EducationDetailsEntity> educationDetailsEntityList = educationDetailsRepository
+				.findByEntityTypeAndEntityId(entityType, entityId);
 		if (!educationDetailsEntityList.isEmpty()) {
 			// Delete each Education Details form submission before deleting
 			educationDetailsEntityList.forEach(educationDetailsEntity -> {
@@ -136,7 +139,9 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 		}
 	}
 
-	private EducationDetailsResponseDTO educationDetailsEntityToEducationDetailsResponseDTO(EducationDetailsEntity educationDetailsEntity) {
+
+	private EducationDetailsResponseDTO educationDetailsEntityToEducationDetailsResponseDTO(
+			EducationDetailsEntity educationDetailsEntity) {
 		EducationDetailsResponseDTO educationDetailsResponseDTO = new EducationDetailsResponseDTO();
 		educationDetailsResponseDTO.setId(educationDetailsEntity.getId());
 		educationDetailsResponseDTO.setCreatedAt(educationDetailsEntity.getCreatedAt());
@@ -152,7 +157,7 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 		educationDetailsResponseDTO.setCreatedBy(userData.getFirstName() + " " + userData.getLastName());
 
 		// Get updated by user data from user microservice
-		if (educationDetailsEntity.getUpdatedBy() == educationDetailsEntity.getCreatedBy()) {
+		if (educationDetailsEntity.getUpdatedBy().equals(educationDetailsEntity.getCreatedBy())) {
 			educationDetailsResponseDTO.setUpdatedBy(userData.getFirstName() + " " + userData.getLastName());
 		} else {
 			userEntity = userRepository.findById(educationDetailsEntity.getUpdatedBy());
@@ -170,8 +175,8 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 		return educationDetailsResponseDTO;
 	}
 
-	private EducationDetailsEntity updateEducationDetailsRequestDTOToEducationDetailsEntity(EducationDetailsEntity educationDetailsEntity,
-			EducationDetailsRequestDTO educationDetailsRequestDTO) {
+	private EducationDetailsEntity updateEducationDetailsRequestDTOToEducationDetailsEntity(
+			EducationDetailsEntity educationDetailsEntity, EducationDetailsRequestDTO educationDetailsRequestDTO) {
 		educationDetailsEntity.setEntityType(educationDetailsRequestDTO.getEntityType());
 		educationDetailsEntity.setEntityId(educationDetailsRequestDTO.getEntityId());
 		educationDetailsEntity.setUpdatedBy(educationDetailsRequestDTO.getUpdatedBy());
@@ -179,7 +184,8 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 		return educationDetailsRepository.save(educationDetailsEntity);
 	}
 
-	private EducationDetailsEntity educationDetailsRequestDTOToEducationDetailsEntity(EducationDetailsRequestDTO educationDetailsRequestDTO) {
+	private EducationDetailsEntity educationDetailsRequestDTOToEducationDetailsEntity(
+			EducationDetailsRequestDTO educationDetailsRequestDTO) {
 		EducationDetailsEntity educationDetailsEntity = new EducationDetailsEntity();
 		educationDetailsEntity.setEntityType(educationDetailsRequestDTO.getEntityType());
 		educationDetailsEntity.setEntityId(educationDetailsRequestDTO.getEntityId());
