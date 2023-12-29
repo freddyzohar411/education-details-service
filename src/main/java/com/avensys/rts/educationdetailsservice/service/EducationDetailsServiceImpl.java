@@ -139,6 +139,7 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 		}
 	}
 
+
 	private EducationDetailsResponseDTO educationDetailsEntityToEducationDetailsResponseDTO(
 			EducationDetailsEntity educationDetailsEntity) {
 		EducationDetailsResponseDTO educationDetailsResponseDTO = new EducationDetailsResponseDTO();
