@@ -136,40 +136,6 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 		}
 	}
 
-	private EducationDetailsResponseDTO educationDetailsEntityToEducationDetailsRequestDTO(EducationDetailsEntity educationDetailsEntity) {
-		EducationDetailsResponseDTO educationDetailsResponseDTO = new EducationDetailsResponseDTO();
-		educationDetailsResponseDTO.setId(educationDetailsEntity.getId());
-		educationDetailsResponseDTO.setCreatedAt(educationDetailsEntity.getCreatedAt());
-		educationDetailsResponseDTO.setUpdatedAt(educationDetailsEntity.getUpdatedAt());
-		educationDetailsResponseDTO.setEntityType(educationDetailsEntity.getEntityType());
-		educationDetailsResponseDTO.setEntityId(educationDetailsEntity.getEntityId());
-		educationDetailsResponseDTO.setFormId(educationDetailsEntity.getFormId());
-		educationDetailsResponseDTO.setFormSubmissionId(educationDetailsEntity.getFormSubmissionId());
-
-		// Get created by User data from user microservice
-		Optional<UserEntity> userEntity = userRepository.findById(educationDetailsEntity.getCreatedBy());
-		UserEntity userData = userEntity.get();
-		educationDetailsResponseDTO.setCreatedBy(userData.getFirstName() + " " + userData.getLastName());
-
-		// Get updated by user data from user microservice
-		if (educationDetailsEntity.getUpdatedBy() == educationDetailsEntity.getCreatedBy()) {
-			educationDetailsResponseDTO.setUpdatedBy(userData.getFirstName() + " " + userData.getLastName());
-		} else {
-			userEntity = userRepository.findById(educationDetailsEntity.getUpdatedBy());
-			userData = userEntity.get();
-			educationDetailsResponseDTO.setUpdatedBy(userData.getFirstName() + " " + userData.getLastName());
-		}
-
-		// Get form submission data
-		HttpResponse formSubmissionResponse = formSubmissionAPIClient
-				.getFormSubmission(educationDetailsEntity.getFormSubmissionId());
-		FormSubmissionsResponseDTO formSubmissionData = MappingUtil
-				.mapClientBodyToClass(formSubmissionResponse.getData(), FormSubmissionsResponseDTO.class);
-		educationDetailsResponseDTO
-				.setSubmissionData(MappingUtil.convertJsonNodeToJSONString(formSubmissionData.getSubmissionData()));
-		return educationDetailsResponseDTO;
-	}
-
 	private EducationDetailsEntity updateEducationDetailsRequestDTOToEducationDetailsEntity(EducationDetailsEntity educationDetailsEntity,
 			EducationDetailsRequestDTO educationDetailsRequestDTO) {
 		educationDetailsEntity.setEntityType(educationDetailsRequestDTO.getEntityType());
@@ -187,6 +153,41 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 		educationDetailsEntity.setUpdatedBy(educationDetailsRequestDTO.getUpdatedBy());
 		educationDetailsEntity.setFormId(educationDetailsRequestDTO.getFormId());
 		return educationDetailsRepository.save(educationDetailsEntity);
+	}
+
+
+	private EducationDetailsResponseDTO educationDetailsEntityToEducationDetailsRequestDTO(EducationDetailsEntity educationDetailsEntity) {
+		EducationDetailsResponseDTO educationDetailsResponseDTO = new EducationDetailsResponseDTO();
+		educationDetailsResponseDTO.setId(educationDetailsEntity.getId());
+		educationDetailsResponseDTO.setCreatedAt(educationDetailsEntity.getCreatedAt());
+		educationDetailsResponseDTO.setUpdatedAt(educationDetailsEntity.getUpdatedAt());
+		educationDetailsResponseDTO.setEntityType(educationDetailsEntity.getEntityType());
+		educationDetailsResponseDTO.setEntityId(educationDetailsEntity.getEntityId());
+		educationDetailsResponseDTO.setFormId(educationDetailsEntity.getFormId());
+		educationDetailsResponseDTO.setFormSubmissionId(educationDetailsEntity.getFormSubmissionId());
+
+		// Get created by User data from user microservice
+		Optional<UserEntity> userEntity = userRepository.findById(educationDetailsEntity.getCreatedBy());
+		UserEntity userData = userEntity.get();
+		educationDetailsResponseDTO.setCreatedBy(userData.getFirstName() + " " + userData.getLastName());
+
+		// Get updated by user data from user microservice
+		if (educationDetailsEntity.getUpdatedBy().equals(educationDetailsEntity.getCreatedBy())) {
+			educationDetailsResponseDTO.setUpdatedBy(userData.getFirstName() + " " + userData.getLastName());
+		} else {
+			userEntity = userRepository.findById(educationDetailsEntity.getUpdatedBy());
+			userData = userEntity.get();
+			educationDetailsResponseDTO.setUpdatedBy(userData.getFirstName() + " " + userData.getLastName());
+		}
+
+		// Get form submission data
+		HttpResponse formSubmissionResponse = formSubmissionAPIClient
+				.getFormSubmission(educationDetailsEntity.getFormSubmissionId());
+		FormSubmissionsResponseDTO formSubmissionData = MappingUtil
+				.mapClientBodyToClass(formSubmissionResponse.getData(), FormSubmissionsResponseDTO.class);
+		educationDetailsResponseDTO
+				.setSubmissionData(MappingUtil.convertJsonNodeToJSONString(formSubmissionData.getSubmissionData()));
+		return educationDetailsResponseDTO;
 	}
 
 }
