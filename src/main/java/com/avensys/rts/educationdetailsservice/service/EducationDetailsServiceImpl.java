@@ -115,9 +115,11 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 	public List<EducationDetailsResponseDTO>getEducationDetailsByEntityTypeAndEntityId(String entityType, Integer entityId) {
 		List<EducationDetailsEntity> educationDetailsEntityList = educationDetailsRepository.findByEntityTypeAndEntityId(entityType,
 				entityId);
-		List<EducationDetailsResponseDTO> educationDetailsResponseDTOList = educationDetailsEntityList.stream()
-				.map(this::educationDetailsEntityToEducationDetailsRequestDTO).toList();
-		return educationDetailsResponseDTOList;
+//		List<EducationDetailsResponseDTO> educationDetailsResponseDTOList = educationDetailsEntityList.stream()
+//				.map(this::educationDetailsEntityToEducationDetailsRequestDTO).toList();
+		return educationDetailsEntityList.stream().map(educationDetailsEntity -> {
+					return educationDetailsEntityToEducationDetailsRequestDTO(educationDetailsEntity);
+				}).toList();
 	}
 
 	@Override
