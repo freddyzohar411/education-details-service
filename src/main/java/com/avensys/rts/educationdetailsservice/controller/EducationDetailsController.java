@@ -20,6 +20,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@RequestMapping("/api/education-details")
 public class EducationDetailsController {
 
 	private final Logger log = LoggerFactory.getLogger(EducationDetailsController.class);
@@ -34,7 +35,7 @@ public class EducationDetailsController {
 		this.messageSource = messageSource;
 	}
 
-	@PostMapping("/education-details")
+	@PostMapping("")
 	public ResponseEntity<Object> createEducationDetails(@Valid @RequestBody EducationDetailsRequestDTO educationDetailsRequestDTO,
 			@RequestHeader(name = "Authorization") String token) {
 		log.info("Create a Education Details : Controller ");
@@ -46,7 +47,7 @@ public class EducationDetailsController {
 				messageSource.getMessage(MessageConstants.MESSAGE_CREATED, null, LocaleContextHolder.getLocale()));
 	}
 
-	@GetMapping("/education-details/entity/{entityType}/{entityId}")
+	@GetMapping("/entity/{entityType}/{entityId}")
 	public ResponseEntity<Object> getEducationDetailsByEntityTypeAndEntityId(@PathVariable String entityType,
 			@PathVariable Integer entityId) {
 		log.info("Get Education Details by entity type and entity id : Controller ");
@@ -55,7 +56,7 @@ public class EducationDetailsController {
 				messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 	}
 
-	@DeleteMapping("/education-details/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deleteEducationDetails(@PathVariable Integer id) {
 		log.info("Delete Education Details : Controller ");
 		educationDetailsService.deleteEducationDetails(id);
@@ -63,7 +64,7 @@ public class EducationDetailsController {
 				messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
 	}
 
-	@PutMapping("/education-details/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<Object> updateEducationDetails(@PathVariable Integer id,
 			@Valid @RequestBody EducationDetailsRequestDTO educationDetailsRequestDTO,
 			@RequestHeader(name = "Authorization") String token) {
@@ -82,7 +83,7 @@ public class EducationDetailsController {
 	 * @param entityId
 	 * @return
 	 */
-	@DeleteMapping("/education-details/entity/{entityType}/{entityId}")
+	@DeleteMapping("/entity/{entityType}/{entityId}")
 	public ResponseEntity<Object> deleteEducationDetailsByEntityTypeAndEntityId(@PathVariable String entityType,
 			@PathVariable Integer entityId) {
 		log.info("Delete Education Details by entity type and entity id : Controller ");
