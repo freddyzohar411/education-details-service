@@ -35,7 +35,7 @@ public class EducationDetailsController {
 		this.messageSource = messageSource;
 	}
 
-	@PostMapping("")
+	@PostMapping("/add")
 	public ResponseEntity<Object> createEducationDetails(@Valid @RequestBody EducationDetailsRequestDTO educationDetailsRequestDTO,
 			@RequestHeader(name = "Authorization") String token) {
 		log.info("Create a Education Details : Controller ");
