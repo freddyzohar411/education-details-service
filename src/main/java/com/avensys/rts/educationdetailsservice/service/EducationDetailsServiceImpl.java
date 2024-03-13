@@ -3,6 +3,7 @@ package com.avensys.rts.educationdetailsservice.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.avensys.rts.educationdetailsservice.payloadnewrequest.EducationDetailsListRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +69,13 @@ public class EducationDetailsServiceImpl implements EducationDetailsService {
 				.mapClientBodyToClass(formSubmissionResponse.getData(), FormSubmissionsResponseDTO.class);
 
 		savedEducationDetailsEntity.setFormSubmissionId(formSubmissionData.getId());
-
+		educationDetailsRepository.save(savedEducationDetailsEntity);
 		return educationDetailsEntityToEducationDetailsResponseDTO(savedEducationDetailsEntity);
+	}
+
+	@Override
+	public void createEducationDetailsList(EducationDetailsListRequestDTO educationDetailsListRequestDTO) {
+		educationDetailsListRequestDTO.getEducationDetailsList().forEach(this::createEducationDetails);
 	}
 
 	@Override
