@@ -1,5 +1,6 @@
 package com.avensys.rts.educationdetailsservice.controller;
 
+import com.avensys.rts.educationdetailsservice.payloadnewrequest.EducationDetailsListRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,20 @@ public class EducationDetailsController {
 		educationDetailsRequestDTO.setUpdatedBy(userId);
 		EducationDetailsResponseDTO createdWorkExperience = educationDetailsService.createEducationDetails(educationDetailsRequestDTO);
 		return ResponseUtil.generateSuccessResponse(createdWorkExperience, HttpStatus.CREATED,
+				messageSource.getMessage(MessageConstants.MESSAGE_CREATED, null, LocaleContextHolder.getLocale()));
+	}
+
+	@PostMapping("/add/list")
+	public ResponseEntity<Object> createEducationDetailsList(@RequestBody EducationDetailsListRequestDTO educationDetailsListRequestDTO,
+			@RequestHeader(name = "Authorization") String token) {
+		log.info("Create a Education Details : Controller ");
+		Long userId = jwtUtil.getUserId(token);
+		educationDetailsListRequestDTO.getEducationDetailsList().forEach(educationDetailsRequest -> {
+			educationDetailsRequest.setCreatedBy(userId);
+			educationDetailsRequest.setUpdatedBy(userId);
+		});
+		educationDetailsService.createEducationDetailsList(educationDetailsListRequestDTO);
+		return ResponseUtil.generateSuccessResponse(null, HttpStatus.CREATED,
 				messageSource.getMessage(MessageConstants.MESSAGE_CREATED, null, LocaleContextHolder.getLocale()));
 	}
 
